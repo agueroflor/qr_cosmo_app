@@ -1,0 +1,1 @@
+export 'scan_qr/scan_qr_bloc.dart';
