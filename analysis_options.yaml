@@ -1,0 +1,12 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  errors:
+    unused_import: warning
+    dead_code: warning
+    no_leading_underscores_for_local_identifiers: ignore
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    avoid_print: false
