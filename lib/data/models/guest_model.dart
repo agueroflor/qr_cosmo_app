@@ -190,15 +190,28 @@ class GuestModel {
     return now.difference(lastUsedDate!).inSeconds < 180;
   }
 
+  /// True si el QR personal ya tuvo una entrada exitosa en el mismo "día de uso":
+  /// - En día operativo (jue/vie/sáb): mismo día operativo.
+  /// - En día no operativo: mismo día civil (evita múltiples entradas el mismo día).
   bool get wasUsedThisOperationalDay {
     if (lastSuccessfulEntry == null) return false;
 
-    final currentOp = getOperationalDay(DateTime.now());
+    final now = DateTime.now();
+    final currentOp = getOperationalDay(now);
     final lastOp = getOperationalDay(lastSuccessfulEntry!);
 
-    if (currentOp == null || lastOp == null) return false;
+    if (currentOp != null && lastOp != null) {
+      return currentOp == lastOp;
+    }
 
-    return currentOp == lastOp;
+    // Mismo día civil (días no operativos o cuando una fecha no tiene día operativo)
+    final today = DateTime(now.year, now.month, now.day);
+    final lastDay = DateTime(
+      lastSuccessfulEntry!.year,
+      lastSuccessfulEntry!.month,
+      lastSuccessfulEntry!.day,
+    );
+    return today == lastDay;
   }
 
   // Obtener los minutos transcurridos desde el último uso
